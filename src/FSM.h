@@ -8,17 +8,23 @@
 enum RobotState{
   start, //This is the starting state of the robot 
   estop, //This is the emergency stop state, robot will stop
-  lineFollow, //To be done
+  lineFollowTime, //Go straight for a certain time interval
+  lineFollowUntilBoth, //Go until a double light trigger
+  lineFollowUntilStop, //Go until a single light trigger
+  turnLeft, //Turn Right For Predefined Time
+  turnRight,
+  turnFlip, //Turn Left For Predfined Time
 };
-void finiteStateMachine(RobotState &currentState, DriveTrain &robot){
+
+void finiteStateMachine(RobotState &currentState, DriveTrain &robot, RobotState &last_state){
   switch (currentState){
     case start:
-        if(0){
+        if(robot.status==3){
             Serial.println("[RemyBot] WAITING FOR SWITCH...");
             robot.setLEDState("waiting");
         }else{
             Serial.println("[RemyBot] Starting next phase");
-            currentState = lineFollow;
+            currentState = lineFollowUntilBoth;
         }
       
     break;
@@ -30,9 +36,43 @@ void finiteStateMachine(RobotState &currentState, DriveTrain &robot){
       
     break;
 
-    case lineFollow:
+    case lineFollowTime:
       Serial.println("[RemyBot] LINE FOLLOWING STARTED..");
       robot.followLine();
+      robot.setLEDState("go");
+    break;
+
+    case lineFollowUntilStop:
+      Serial.println("[RemyBot] LINE FOLLOWING STARTED..");
+      robot.followLine();
+      robot.setLEDState("go");
+    break;
+
+    case lineFollowUntilBoth:
+      Serial.println("[RemyBot] LINE FOLLOWING STARTED..");
+      robot.followLine();
+      robot.setLEDState("go");
+    break;
+
+    case turnLeft:
+      Serial.println("[RemyBot] Turning Left..");
+      robot.setLEDState("turning");
+      robot.turn(1);
+
+    break;
+
+    case turnRight:
+      Serial.println("[RemyBot] Turning Right..");
+      robot.setLEDState("turning");
+      robot.turn(0);
+
+    break;
+
+    case turnFlip:
+      Serial.println("[RemyBot] Turning Right..");
+      robot.setLEDState("turning");
+      robot.turn(0);
+
     break;
   }
 }

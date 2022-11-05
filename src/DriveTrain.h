@@ -6,12 +6,16 @@
 
 class DriveTrain{
   public:
+    enum Status{
+      running, danger, done, idle
+    };
+    Status status = idle;
     int A,B,C,D,EN1,EN2,LS,RS,leftLed,rightLed;
     int speed = 100;
     int kp = 1;
     //Movement Functions
     void driveForward();
-    void driveBackward();
+    void turn180();
     void estop();
     void turn(int direction);
     //Adjustment Functions
@@ -24,6 +28,7 @@ class DriveTrain{
     //Acquisition Functions
     int readSensorL();
     int readSensorR();
+
     //Constructor
     DriveTrain(int A, int B, int C, int D, int EN1, int EN2, int LS, int RS, int leftLed, int rightLed){
       A = A;
@@ -50,12 +55,13 @@ void DriveTrain::driveForward(){
   digitalWrite(D, LOW);
 }
 
-void DriveTrain::driveBackward(){
-  Serial.println("Driving Backward");
-  digitalWrite(A, LOW);
-  digitalWrite(B, HIGH);
+void DriveTrain::turn180(){
+  Serial.println("Driving 180");
+  digitalWrite(A, HIGH);
+  digitalWrite(B, LOW);
   digitalWrite(C, LOW);
   digitalWrite(D, HIGH);
+  delay(2000); //Hardcoded turning value
 }
 
 void DriveTrain::turn(int direction){
