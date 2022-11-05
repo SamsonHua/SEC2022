@@ -18,7 +18,7 @@ enum RobotState{
 void finiteStateMachine(RobotState &currentState, DriveTrain &robot, RobotState &last_state, int tableNumber){
   switch (currentState){
     case start:
-        if(robot.status==3){
+        if(0){
             Serial.println("[RemyBot] WAITING FOR SWITCH...");
             robot.setLEDState("waiting");
         }else{
@@ -51,8 +51,10 @@ void finiteStateMachine(RobotState &currentState, DriveTrain &robot, RobotState 
             currentState = turnRight;
         }else if (tableNumber < 5){
             currentState = turnLeft;
+
         }else{
             currentState = lineFollowTime;
+
         }
       }
     break;
@@ -61,6 +63,7 @@ void finiteStateMachine(RobotState &currentState, DriveTrain &robot, RobotState 
       Serial.println("[RemyBot] Turning Left..");
       robot.setLEDState("turning");
       robot.turn(1);
+      currentState=estop;
 
     break;
 
@@ -68,6 +71,7 @@ void finiteStateMachine(RobotState &currentState, DriveTrain &robot, RobotState 
       Serial.println("[RemyBot] Turning Right..");
       robot.setLEDState("turning");
       robot.turn(0);
+      currentState=estop;
 
     break;
 

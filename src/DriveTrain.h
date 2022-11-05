@@ -11,7 +11,7 @@ class DriveTrain{
     };
     Status status = idle;
     int A,B,C,D,EN1,EN2,LS,RS,leftLed,rightLed;
-    int speed = 50;
+    int speed = 60;
     int kp = 1;
     //Movement Functions
     void driveForward();
@@ -32,13 +32,13 @@ class DriveTrain{
     int readSensorR();
 
     //Constructor
-    DriveTrain(int A, int B, int C, int D, int EN1, int EN2, int LS, int RS, int leftLed, int rightLed){
-      A = A;
-      B = B;
-      C = C;
-      D = D;
-      EN1 = EN1;
-      EN2 = EN2;
+    DriveTrain(int ANew, int BNew, int CNew, int DNew, int EN1New, int EN2New, int LS, int RS, int leftLed, int rightLed){
+      A = ANew;
+      B = BNew;
+      C = CNew;
+      D = DNew;
+      EN1 = EN1New;
+      EN2 = EN2New;
       LS = LS;
       RS = RS;
       leftLed = leftLed;
@@ -161,6 +161,10 @@ int DriveTrain::readSensorR(){
 
 void DriveTrain::estop(){
   Serial.println("ESTOP");
+  digitalWrite(A, LOW);
+  digitalWrite(B, LOW);
+  digitalWrite(C, LOW);
+  digitalWrite(D, LOW);
 }
 
 void DriveTrain::setLEDState(String newState){
