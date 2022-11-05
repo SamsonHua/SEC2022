@@ -11,20 +11,22 @@ class DriveTrain{
     };
     Status status = idle;
     int A,B,C,D,EN1,EN2,LS,RS,leftLed,rightLed;
-    int speed = 100;
+    int speed = 50;
     int kp = 1;
     //Movement Functions
     void driveForward();
     void turn180();
     void estop();
     void turn(int direction);
+    void stop();
     //Adjustment Functions
     void setDifferential(int Difference);
     void setSpeed(int NewSpeed);
     void setKp(int newKp);
     void setLEDState(String status);
     //Movement Functions
-    void followLine();
+    void followLineUntil();
+    void followLineTime();
     //Acquisition Functions
     int readSensorL();
     int readSensorR();
@@ -55,6 +57,14 @@ void DriveTrain::driveForward(){
   digitalWrite(D, LOW);
 }
 
+void DriveTrain::stop(){
+  Serial.println("Stopping");
+  digitalWrite(A, LOW);
+  digitalWrite(B, LOW);
+  digitalWrite(C, LOW);
+  digitalWrite(D, LOW);
+}
+
 void DriveTrain::turn180(){
   Serial.println("Driving 180");
   digitalWrite(A, HIGH);
@@ -78,7 +88,6 @@ void DriveTrain::turn(int direction){
     digitalWrite(D, LOW);
     delay(1000);
   }
-
 }
 
 
@@ -86,16 +95,17 @@ void DriveTrain::setDifferential(int Difference){
   Serial.println("Driving Differential");
   analogWrite(EN1, speed + Difference);
   analogWrite(EN2, speed - Difference);
-
 }
 
-void DriveTrain::followLine(){
+void DriveTrain::followLineUntil(){
   this->readSensorR();
   this->readSensorL();
 
   //Truth Table
   if(LS == HIGH && RS == HIGH){
     //Both Triggered
+    this->stop();
+    status = done;
   }else if(LS == HIGH && RS == LOW){
     //Left Triggered
     this->setDifferential(kp);
@@ -105,8 +115,24 @@ void DriveTrain::followLine(){
   }else{
     this->driveForward();
   }
+}
 
-
+void DriveTrain::followLineTime(){
+  this->readSensorR();
+  this->readSensorL();
+  //Truth Table
+  if(LS == HIGH && RS == HIGH){
+    //Both Triggered
+    this->stop();
+  }else if(LS == HIGH && RS == LOW){
+    //Left Triggered
+    this->setDifferential(kp);
+  }else if(LS == LOW && RS == HIGH){
+    //RightTriggered
+    this->setDifferential(-kp);
+  }else{
+    this->driveForward();
+  }
 }
 
 void DriveTrain::setSpeed(int NewSpeed){

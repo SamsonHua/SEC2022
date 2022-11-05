@@ -18,6 +18,6 @@ void setup() {
 
 //Loop
 void loop() {
-  finiteStateMachine(currentState, Robot, lastState); //Start Finite State Machine
+  finiteStateMachine(currentState, Robot, lastState, TargetTable); //Start Finite State Machine
   delay(100);
 }
